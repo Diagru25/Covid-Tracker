@@ -1,0 +1,9 @@
+.countrySelect {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    outline: none;
+
+    margin-bottom: 25px;
+}
