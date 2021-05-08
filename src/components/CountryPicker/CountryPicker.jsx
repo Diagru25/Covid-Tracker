@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getCountriesName } from '../../api/index';
+import { actions } from '../../redux/Summary/actions';
 
 import styles from './CountryPicker.module.css';
 
 const CountryPicker = () => {
+
+    const dispatch = useDispatch();
+    const {country} = useSelector(state => state.summaryReducer);
+
     const [countries, setCountries] = useState([]);
-    const [valueSelected, setValueSelected] = useState('global');
 
     useEffect(() => {
         async function getData() {
@@ -18,14 +23,14 @@ const CountryPicker = () => {
     }, [])
 
     const handleChange = (e) => {
-        setValueSelected(e.target.value);
+        dispatch(actions.changeCountry(e.target.value))
     }
     return (
         <div>
             <select 
                 name="countries" 
                 id="countries" 
-                value={valueSelected} 
+                value={country} 
                 onChange={handleChange}
                 className={styles.countrySelect}
             >

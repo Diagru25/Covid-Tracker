@@ -2,28 +2,60 @@ import axios from 'axios';
 
 const url = 'https://api.covid19api.com';
 
-const fetchData = async () => {
+const fetchDataSummary = async (country) => {
     try {
         const response = await axios.get(`${url}/summary`);
         const fetchedData = response.data;
 
-        const modifiedData = {
-            confirmed: fetchedData.Global.TotalConfirmed,
-            recovered: fetchedData.Global.TotalRecovered,
-            deaths: fetchedData.Global.TotalDeaths,
-            lastUpdate: fetchedData.Global.Date
+        let modifiedData = {};
+        if (country === 'global') {
+
+            modifiedData = {
+                totalConfirmed: fetchedData.Global.TotalConfirmed,
+                totalRecovered: fetchedData.Global.TotalRecovered,
+                totalDeaths: fetchedData.Global.TotalDeaths,
+                newConfirmed: fetchedData.Global.NewConfirmed,
+                newRecovered: fetchedData.Global.NewConfirmed,
+                newDeaths: fetchedData.Global.NewConfirmed,
+                lastUpdate: fetchedData.Global.Date
+            }
+        }
+        else {
+            const foundIndex = fetchedData.Countries.findIndex(element => element.Slug === country);
+
+            modifiedData = {
+                totalConfirmed: fetchedData.Countries[foundIndex].TotalConfirmed,
+                totalRecovered: fetchedData.Countries[foundIndex].TotalRecovered,
+                totalDeaths: fetchedData.Countries[foundIndex].TotalDeaths,
+                newConfirmed: fetchedData.Countries[foundIndex].NewConfirmed,
+                newRecovered: fetchedData.Countries[foundIndex].NewConfirmed,
+                newDeaths: fetchedData.Countries[foundIndex].NewConfirmed,
+                lastUpdate: fetchedData.Countries[foundIndex].Date
+            }
         }
 
         return modifiedData;
     }
     catch (err) {
         console.log(err);
+        return;
     }
 }
 
-const fetchDailyData = async (from, to) => {
+const fetchDailyDataGlobal = async (from, to) => {
     try {
         const response = await axios.get(`${url}/world?from=${from}&to=${to}`);
+
+        return response.data;
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+const fetchDailyDataCountry = async (from, to, country) => {
+    try {
+        const response = await axios.get(`${url}/country/${country}?from=${from}&to=${to}`);
 
         return response.data;
     }
@@ -52,7 +84,8 @@ const getCountriesName = async () => {
 }
 
 export {
-    fetchData,
+    fetchDataSummary,
     getCountriesName,
-    fetchDailyData
+    fetchDailyDataGlobal,
+    fetchDailyDataCountry
 }
