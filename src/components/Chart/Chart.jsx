@@ -2,51 +2,50 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Bar, Line } from 'react-chartjs-2';
 
-import {actions} from '../../redux/Summary/actions';
+import { actions } from '../../redux/Summary/actions';
 
 import styles from './Chart.module.css';
 
 const Chart = () => {
-    const {dailyData, summary} = useSelector(state => state.summaryReducer);
+    const { dailyData, summary } = useSelector(state => state.summaryReducer);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(actions.changeCountry('global'));
-    },[dispatch])
+    }, [dispatch])
 
+    console.log(dailyData.length);
     const lineChart = (
-        dailyData[0]
-            ?
-            (<Line
-                data={{
-                    labels: dailyData.map((date) => new Date(date.Date).toLocaleDateString('vi-VN')),
-                    datasets: [{
-                        data: dailyData.map(({ Confirmed }) => Confirmed),
-                        label: 'Infected',
-                        borderColor: '#3333ff',
-                        fill: false
-                    },
-                    {
-                        data: dailyData.map(({ Recovered }) => Recovered),
-                        label: 'Recovered',
-                        borderColor: '#3fff00',
-                        fill: false
-                    },
-                    {
-                        data: dailyData.map(({ Deaths }) => Deaths),
-                        label: 'deaths',
-                        borderColor: '#ff7f7f',
-                        fill: false
+        <Line
+            data={{
+                labels: dailyData.map((date) => new Date(date.Date).toLocaleDateString('vi-VN')),
+                datasets: [{
+                    data: dailyData.map(({ Confirmed }) => Confirmed),
+                    label: 'Infected',
+                    borderColor: '#3333ff',
+                    fill: false
+                },
+                {
+                    data: dailyData.map(({ Recovered }) => Recovered),
+                    label: 'Recovered',
+                    borderColor: '#3fff00',
+                    fill: false
+                },
+                {
+                    data: dailyData.map(({ Deaths }) => Deaths),
+                    label: 'deaths',
+                    borderColor: '#ff7f7f',
+                    fill: false
 
-                    }]
-                }}
-            />) : null
+                }]
+            }}
+        />
     );
 
     const barChart = (
         <Bar
-            data = {{
+            data={{
                 labels: ['Infected', 'Recovered', 'Deaths'],
                 datasets: [{
                     data: [summary.totalConfirmed, summary.totalRecovered, summary.totalDeaths],
@@ -68,10 +67,19 @@ const Chart = () => {
         />
     )
 
+    const draw = () => {
+        if (dailyData.length > 0)
+            return lineChart;
+        else
+            return 'No data'
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.chart}>
-                {lineChart}
+                {
+                    draw()
+                }
             </div>
             <div className={styles.chart}>
                 {barChart}

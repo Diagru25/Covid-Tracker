@@ -8,6 +8,7 @@ const fetchDataSummary = async (country) => {
         const fetchedData = response.data;
 
         let modifiedData = {};
+
         if (country === 'global') {
 
             modifiedData = {
@@ -23,7 +24,7 @@ const fetchDataSummary = async (country) => {
         else {
             const foundIndex = fetchedData.Countries.findIndex(element => element.Slug === country);
 
-            modifiedData = {
+            modifiedData = foundIndex !== -1 ? {
                 totalConfirmed: fetchedData.Countries[foundIndex].TotalConfirmed,
                 totalRecovered: fetchedData.Countries[foundIndex].TotalRecovered,
                 totalDeaths: fetchedData.Countries[foundIndex].TotalDeaths,
@@ -31,7 +32,7 @@ const fetchDataSummary = async (country) => {
                 newRecovered: fetchedData.Countries[foundIndex].NewConfirmed,
                 newDeaths: fetchedData.Countries[foundIndex].NewConfirmed,
                 lastUpdate: fetchedData.Countries[foundIndex].Date
-            }
+            } : null
         }
 
         return modifiedData;

@@ -8,7 +8,7 @@ const defaultSummary = {
     newConfirmed: 0,
     newRecovered: 0,
     newDeaths: 0,
-    lastUpdate: 0
+    lastUpdate: new Date().toLocaleDateString('vi-VN')
 }
 
 const initialState = {
@@ -21,6 +21,14 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case types.DEFAULT_SUMMARY:
+            return {
+                ...state,
+                ...{
+                    summary: defaultSummary,
+                    dailyData: []
+                }
+            }
         case types.UPDATE_STATE:
             return {
                 ...state,

@@ -21,13 +21,15 @@ function* saga_changeCountry(action) {
 
         if (country === 'global') {
             dailyData = yield fetchDailyDataGlobal(from, to);
-            dailyData = dailyData.map((item) => {return {
-                Confirmed: item.TotalConfirmed,
-                Recovered: item.TotalRecovered,
-                Deaths: item.TotalDeaths,
-                Date: item.Date
-            }});
-            
+            dailyData = dailyData.map((item) => {
+                return {
+                    Confirmed: item.TotalConfirmed,
+                    Recovered: item.TotalRecovered,
+                    Deaths: item.TotalDeaths,
+                    Date: item.Date
+                }
+            });
+
         }
         else {
             dailyData = yield fetchDailyDataCountry(from, to, country);
@@ -35,7 +37,12 @@ function* saga_changeCountry(action) {
 
         dailyData.sort((a, b) => new Date(a.Date) - new Date(b.Date));
 
-        yield put(actions.updateState({ country, summary, dailyData }));
+        if (summary !== null)
+            yield put(actions.updateState({ country, summary, dailyData }))
+        else {
+            yield put(actions.setDefaultSummary());
+            yield put(actions.updateState({ country }));
+        }
     }
     catch (err) {
         console.log(err)
