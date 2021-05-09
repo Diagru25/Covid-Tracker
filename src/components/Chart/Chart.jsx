@@ -15,7 +15,6 @@ const Chart = () => {
         dispatch(actions.changeCountry('global'));
     }, [dispatch])
 
-    console.log(dailyData.length);
     const lineChart = (
         <Line
             data={{
