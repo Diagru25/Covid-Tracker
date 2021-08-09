@@ -37,7 +37,21 @@ const Chart = () => {
                     borderColor: '#ff7f7f',
                     fill: false
 
-                }]
+                }],
+
+            }}
+            options={{
+                elements: {
+                    point: {
+                        radius: 4,
+                        backgroundColor: 'transparent',
+                        borderWidth: 0
+                    },
+                    tension: 0.9,
+                    data: {
+                        tension: 0.9
+                    }
+                }
             }}
         />
     );
